@@ -100,8 +100,9 @@ function createWriteCallback(suppliedCallback) {
     };
 }
 class I2C extends raspi_peripheral_1.Peripheral {
-    constructor() {
+    constructor(bus) {
         super(['SDA0', 'SCL0']);
+	this.bus = bus;
         this._devices = [];
         child_process_1.execSync('modprobe i2c-dev');
     }
@@ -384,7 +385,7 @@ class I2C extends raspi_peripheral_1.Peripheral {
     _getDevice(address) {
         let device = this._devices[address];
         if (device === undefined) {
-            device = i2c_bus_1.openSync(raspi_board_1.getBoardRevision() === raspi_board_1.VERSION_1_MODEL_B_REV_1 ? 0 : 1);
+            device = i2c_bus_1.openSync(this.bus);
             this._devices[address] = device;
         }
         return device;

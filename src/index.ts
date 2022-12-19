@@ -112,8 +112,9 @@ export class I2C extends Peripheral implements II2C {
 
   private _devices: I2cBus[] = [];
 
-  constructor() {
+  constructor(bus) {
     super([ 'SDA0', 'SCL0' ]);
+    this.bus = bus;
     execSync('modprobe i2c-dev');
   }
 
@@ -456,7 +457,7 @@ export class I2C extends Peripheral implements II2C {
     let device = this._devices[address];
 
     if (device === undefined) {
-      device = openSync(getBoardRevision() === VERSION_1_MODEL_B_REV_1 ? 0 : 1);
+      device = openSync(this.bus);
       this._devices[address] = device;
     }
 
